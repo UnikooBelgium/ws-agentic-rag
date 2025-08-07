@@ -66,13 +66,6 @@ _graph = get_graph()
 def main():
     print("Hello from ws-agentic-rag!")
 
-    # retriever = load_vector_store("resources/MakingMusic_DennisDeSantis.pdf")
-
-    # query = "What are the 3 ways to start making music?"
-    # print(f"Query: {query}")
-    # result = retriever.invoke(query)
-    # print(f"Result: {result}")
-
 
 if __name__ == "__main__":
     main()
