@@ -62,7 +62,7 @@ Required Bedrock models in `eu-central-1` region:
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/UnikooBelgium/ws-agentic-rag
    cd ws-agentic-rag
    ```
 
@@ -98,10 +98,10 @@ This starts the interactive LangGraph Studio where you can:
 ### Programmatic Usage
 
 ```python
-from main import _graph
+from main import get_graph
 
 # Initialize the graph
-graph = _graph
+graph = get_graph()
 
 # Run a query
 result = graph.invoke({
