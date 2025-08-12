@@ -19,6 +19,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "grandalf>=0.8",
-    "langgraph-cli[inmem]>=0.3.6",
+ "langgraph-cli[inmem]>=0.3.6",
+ "pyppeteer>=2.0.0",
 ]

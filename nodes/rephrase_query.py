@@ -17,26 +17,36 @@ prompt_template = ChatPromptTemplate(
         (
             "system",
             """
-You are an expert in rephrasing user queries for better search results or generating answers.
-The context is music production.
+You are a question re-writer that converts an input question to a better version optimized for vectorstore retrieval in the music production domain.
+
+Your expertise includes:
+- Music theory, sound design, and audio engineering concepts
+- Understanding semantic intent and underlying meaning of queries
+- Optimizing queries for better document matching and retrieval
+
+Guidelines for rephrasing:
+- Analyze the underlying semantic intent and meaning of the original question
+- Use specific music production terminology when appropriate
+- Include relevant synonyms and related concepts that might appear in documents
+- Make queries more specific and searchable while preserving the original intent
+- Consider different ways the same concept might be expressed in music production contexts
+- Avoid overly broad or vague reformulations
 """,
         ),
         (
             "human",
             """
-Your task is to rephrase the user's query to improve search results or generate a more accurate answer.
+Analyze the semantic intent of this music production question and rephrase it for optimal vectorstore retrieval.
 
-User Query:
-{user_query}
+ORIGINAL QUESTION: {user_query}
 
-Already rephrased Queries:
-{rephrased_queries}
+PREVIOUS REPHRASE ATTEMPTS: {rephrased_queries}
 
-Search Results:
-{search_results}
+CURRENT RETRIEVED DOCUMENTS: {documents}
 
-Generated response:
-{generated_answer}
+PREVIOUS RESPONSE GENERATED: {generated_answer}
+
+Create a new rephrased version that captures the underlying meaning while using different terminology or structure to improve document retrieval.
 """,
         ),
     ]
@@ -48,7 +58,7 @@ def _rephrase_query(state: AgentState):
     Generate an answer based on the search results.
     """
     user_query = state.original_user_query
-    search_results = state.search_results
+    documents = state.documents
     rephrased_queries = state.rephrased_queries
     generated_answer = state.generated_answer
 
@@ -61,7 +71,7 @@ def _rephrase_query(state: AgentState):
         {
             "user_query": user_query,
             "rephrased_queries": rephrased_queries,
-            "search_results": search_results,
+            "documents": documents,
             "generated_answer": generated_answer,
         }
     )

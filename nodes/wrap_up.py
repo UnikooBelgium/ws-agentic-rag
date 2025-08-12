@@ -9,5 +9,4 @@ def _wrap_up(state: AgentState) -> AgentState:
     generated_message = state.generated_answer
     return {
         "messages": [AIMessage(content=generated_message)],
-        "answer": generated_message,
     }

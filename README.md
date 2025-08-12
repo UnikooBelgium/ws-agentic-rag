@@ -122,7 +122,7 @@ ws-agentic-rag/
 │   └── state.py              # Agent state definitions
 ├── nodes/                    # Workflow nodes
 │   ├── user_intent.py        # Extract user query
-│   ├── load_search_results.py # Vector search
+│   ├── load_documents.py     # Vector search
 │   ├── check_relevance.py    # Relevance validation
 │   ├── rephrase_query.py     # Query rephrasing
 │   ├── generate.py           # Answer generation
@@ -173,7 +173,7 @@ The system is specifically optimized for music production topics including:
 Place PDF documents in the `resources/` folder and update the vector store loading:
 
 ```python
-# In nodes/load_search_results.py
+# In nodes/load_documents.py
 vector_store = load_vector_store("resources/your-document.pdf")
 ```
 
