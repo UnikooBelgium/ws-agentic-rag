@@ -112,8 +112,8 @@ This opens LangGraph Studio where you can visualize the workflow and test querie
 - **Direct responses** for simple questions or when comprehensive knowledge is sufficient
 - **Non-music production filtering** to maintain domain focus
 
-**🔄 Enhanced Self-Correction Loop**:
-- **Semantic Query Analysis**: Deep understanding of music production terminology and intent
+**🔄 Self-Correction Loop**:
+- **Semantic Query Analysis**: Understanding of music production terminology and intent
 - **Advanced Document Grading**: Lenient relevance assessment to maximize useful information
 - **Multi-criteria Answer Validation**: Separate hallucination detection and answer quality assessment
 - **Intelligent Rephrasing**: Context-aware query reformulation with previous attempt awareness
@@ -124,24 +124,6 @@ This opens LangGraph Studio where you can visualize the workflow and test querie
 - Quality answer generated → Wrap up successfully  
 - Hallucinated content detected → Express uncertainty with caveats
 - Poor but grounded answer → Rephrase query and retry (max 3x)
-
-**🔧 Technical Improvements**:
-- **LangGraph Tools Integration**: Native tools_condition for conditional workflow execution
-- **Streamlined State Management**: Reduced state complexity with focused data flow
-- **Enhanced Error Handling**: Graceful degradation when retrieval fails
-- **Optimized Performance**: Efficient routing reduces unnecessary processing
-
-## 🛠️ Programmatic Usage
-
-```python
-from main import get_graph
-
-graph = get_graph()
-result = graph.invoke({
-    "messages": [("human", "What is compression in music production?")]
-})
-print(result["messages"][-1])
-```
 
 ## 📄 License
 
