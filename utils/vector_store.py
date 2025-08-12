@@ -1,15 +1,16 @@
-import faiss
+import os
 from typing import List
 from langchain_core.documents import Document
-from langchain_community.docstore.in_memory import InMemoryDocstore
-from langchain_community.vectorstores import FAISS
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
 
 from utils.aws_bedrock import embeddings, compressor
 
-embedding_length = len(embeddings.embed_query("index dimensions"))
+# Directory for persistent storage
+PERSIST_DIRECTORY = ".chroma_db"
+
 text_splitter = RecursiveCharacterTextSplitter(
     # Set a really small chunk size, just to show.
     chunk_size=2048,
@@ -26,7 +27,7 @@ def load_pdf(file_path: str) -> List[Document]:
         pages.append(page)
 
         # Pretty print the page content
-        print(f"Page {page.metadata['page']}: {page.page_content[:50]}...")
+        print(f"Loading page {page.metadata['page']}: {page.page_content[:50]}...\n\n")
 
     documents = text_splitter.create_documents([page.page_content for page in pages])
 
@@ -34,24 +35,30 @@ def load_pdf(file_path: str) -> List[Document]:
 
 
 def load_vector_store(file_path: str) -> ContextualCompressionRetriever:
+    # Create persist directory if it doesn't exist
+    os.makedirs(PERSIST_DIRECTORY, exist_ok=True)
 
-    vector_store = FAISS(
+    # Initialize ChromaDB with persistence
+    vector_store = Chroma(
         embedding_function=embeddings,
-        index=faiss.IndexFlatL2(embedding_length),
-        docstore=InMemoryDocstore(),
-        index_to_docstore_id={},
+        persist_directory=PERSIST_DIRECTORY,
+        collection_name="pdf_documents",
     )
 
-    vector_store.add_documents(load_pdf(file_path))
+    # Check if the collection already has documents
+    if vector_store._collection.count() == 0:
+        print("Loading PDF and creating embeddings...")
+        documents = load_pdf(file_path)
+        vector_store.add_documents(documents)
+        print("Documents added to vector store")
+    else:
+        print("Vector store already contains documents")
 
-    print(f"Vector store loaded")
+    print(f"Vector store loaded with {vector_store._collection.count()} documents")
 
     compression_retriever = ContextualCompressionRetriever(
         base_compressor=compressor,
-        base_retriever=vector_store.as_retriever(search_kwargs={"k": 10}),
+        base_retriever=vector_store.as_retriever(search_kwargs={"k": 20}),
     )
 
     return compression_retriever
-
-
-_loaded_vector_store = load_vector_store("resources/MakingMusic_DennisDeSantis.pdf")

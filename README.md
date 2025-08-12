@@ -232,3 +232,8 @@ logging.basicConfig(level=logging.DEBUG)
 ---
 
 Built with ❤️
+
+## TODO
+
+- Update user intent with DuckDuckGo websearch and alternative to directly generate by LLM
+- Change FAISS to ChromaDB with persistency

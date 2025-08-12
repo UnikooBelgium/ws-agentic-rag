@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, START, END
+from langchain_core.runnables.graph import MermaidDrawMethod
 
 from models.state import AgentState, InputAgentState, OutputAgentState
 
@@ -64,7 +65,9 @@ _graph = get_graph()
 
 
 def main():
-    print("Hello from ws-agentic-rag!")
+    _graph.get_graph().draw_mermaid_png(
+        output_file_path="resources/workflow_diagram.png",
+    )
 
 
 if __name__ == "__main__":

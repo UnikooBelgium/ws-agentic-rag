@@ -12,3 +12,4 @@ wheels/
 # Other
 .DS_Store
 .langgraph_api
+.chroma_db
