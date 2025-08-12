@@ -13,3 +13,4 @@ wheels/
 .DS_Store
 .langgraph_api
 .chroma_db
+.env
