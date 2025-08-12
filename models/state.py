@@ -26,7 +26,6 @@ class AgentState(InputAgentState):
     """
 
     original_user_query: Optional[str] = None
-    documents: Optional[List[str]] = None
-    relevance_reasoning: Optional[str] = None
+    documents: Optional[str] = None
     generated_answer: Optional[str] = None
     rephrased_queries: List[str] = []

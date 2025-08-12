@@ -31,6 +31,7 @@ Guidelines for rephrasing:
 - Make queries more specific and searchable while preserving the original intent
 - Consider different ways the same concept might be expressed in music production contexts
 - Avoid overly broad or vague reformulations
+- The result must always be formulated as a clear question.
 """,
         ),
         (

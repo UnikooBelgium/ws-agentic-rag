@@ -7,9 +7,9 @@ from utils.aws_bedrock import chat_claude_4_sonnet
 
 
 class GradingResult(BaseModel):
-    relevant_document_indexes: List[int] = Field(
-        default_factory=list,
-        description="Indicates the indexes of relevant documents for the user's query.",
+    documents_relevant: bool = Field(
+        default=False,
+        description="Indicates whether the retrieved documents are relevant to the user's query.",
     )
 
 
@@ -59,31 +59,18 @@ def _grade_documents(state: AgentState):
     Check the relevance of the documents to the user's query.
     """
     user_query = state.original_user_query
-    documents = state.documents
+    documents = state.messages[-1].content
 
     # Early return if no documents to grade
     if not documents:
-        return {"documents": [], "original_user_query": user_query}
+        return {"documents": None, "original_user_query": user_query}
 
     model_with_structured_output = chat_claude_4_sonnet.with_structured_output(
         GradingResult
     )
 
-    # Format documents with clear indexing for the model
-    documents_string = "\n\n".join(
-        f"INDEX: {i}\nCONTENT: {document}" for i, document in enumerate(documents)
-    )
-
-    # Get relevance assessment from the model
     response: GradingResult = (prompt_template | model_with_structured_output).invoke(
-        {"user_query": user_query, "documents": documents_string}
+        {"user_query": user_query, "documents": documents}
     )
 
-    # Filter documents based on relevant indexes
-    filtered_documents = [
-        documents[i]
-        for i in response.relevant_document_indexes
-        if 0 <= i < len(documents)  # Ensure index is valid
-    ]
-
-    return {"documents": filtered_documents, "original_user_query": user_query}
+    return {"documents": documents, "original_user_query": user_query}

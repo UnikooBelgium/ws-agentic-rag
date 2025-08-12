@@ -91,21 +91,45 @@ This opens LangGraph Studio where you can visualize the workflow and test querie
 
 ## 🎯 Features
 
-- **Smart Document Search** with ChromaDB + Cohere embeddings
-- **Relevance Filtering** to grade document quality
-- **Self-Correcting Queries** with automatic rephrasing (max 3x)
-- **Answer Validation** with hallucination detection
-- **Uncertainty Handling** when confidence is low
+- **Intelligent Query Routing** with supervisor node that decides when to use retrieval vs. direct responses
+- **Advanced Tool Integration** using LangGraph's built-in tools_condition for dynamic workflow control
+- **Smart Document Search** with ChromaDB + Cohere embeddings and reranking
+- **Comprehensive Retrieval Tool** with detailed music production knowledge base covering 74+ strategies
+- **Enhanced Document Grading** with improved relevance filtering and lenient assessment criteria
+- **Self-Correcting Queries** with semantic intent analysis and automatic rephrasing (max 3x)
+- **Multi-Stage Answer Validation** with both hallucination detection and answer quality assessment
+- **Intelligent Uncertainty Handling** when confidence is low or information is insufficient
+- **Optimized State Management** with streamlined data flow and reduced complexity
 
 ## 📁 Architecture
 
-Self-correcting RAG workflow: **User Intent** → **Load Documents** → **Grade Documents** → **Generate** → **Grade Answer** → **Wrap Up**
+**Improved Self-RAG Workflow:** **Supervise** → **Retrieve Documents** → **Grade Documents** → **Generate** → **Grade Answer** → **Wrap Up**
 
-**Smart Routing:**
-- No relevant docs or 3 rephrases → Generate anyway
-- Good answer → Wrap up
-- Hallucinated answer → Express uncertainty
-- Poor answer → Rephrase and retry
+### Core Components
+
+**🧠 Supervisor Node**: Intelligent routing system that analyzes queries and decides between:
+- **Tool-based retrieval** for complex technical questions requiring detailed documentation
+- **Direct responses** for simple questions or when comprehensive knowledge is sufficient
+- **Non-music production filtering** to maintain domain focus
+
+**🔄 Enhanced Self-Correction Loop**:
+- **Semantic Query Analysis**: Deep understanding of music production terminology and intent
+- **Advanced Document Grading**: Lenient relevance assessment to maximize useful information
+- **Multi-criteria Answer Validation**: Separate hallucination detection and answer quality assessment
+- **Intelligent Rephrasing**: Context-aware query reformulation with previous attempt awareness
+
+**🛤️ Smart Routing Logic**:
+- Supervisor determines retrieval necessity → Retrieve & grade documents if needed
+- No relevant docs found OR 3 rephrases reached → Generate answer anyway
+- Quality answer generated → Wrap up successfully  
+- Hallucinated content detected → Express uncertainty with caveats
+- Poor but grounded answer → Rephrase query and retry (max 3x)
+
+**🔧 Technical Improvements**:
+- **LangGraph Tools Integration**: Native tools_condition for conditional workflow execution
+- **Streamlined State Management**: Reduced state complexity with focused data flow
+- **Enhanced Error Handling**: Graceful degradation when retrieval fails
+- **Optimized Performance**: Efficient routing reduces unnecessary processing
 
 ## 🛠️ Programmatic Usage
 
@@ -116,7 +140,7 @@ graph = get_graph()
 result = graph.invoke({
     "messages": [("human", "What is compression in music production?")]
 })
-print(result["messages"])
+print(result["messages"][-1])
 ```
 
 ## 📄 License

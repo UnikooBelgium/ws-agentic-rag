@@ -1,11 +1,12 @@
 from langgraph.graph import StateGraph, START, END
+from langgraph.prebuilt import tools_condition
 from langchain_core.runnables.graph import CurveStyle, MermaidDrawMethod
 
 
 from models.state import AgentState, InputAgentState, OutputAgentState
 
-from nodes.user_intent import _user_intent
-from nodes.load_documents import _load_documents
+from nodes.supervise import _supervise
+from nodes.retrieve_documents import _retrieve_documents
 from nodes.grade_documents import _grade_documents
 from nodes.generate import _generate
 from nodes.rephrase_query import _rephrase_query
@@ -27,17 +28,26 @@ def get_graph() -> StateGraph:
         AgentState, input_schema=InputAgentState, output_schema=OutputAgentState
     )
 
-    workflow.add_node("user_intent", _user_intent)
-    workflow.add_node("load_documents", _load_documents)
+    workflow.add_node("supervise", _supervise)
+    workflow.add_node("retrieve_documents", _retrieve_documents)
     workflow.add_node("grade_documents", _grade_documents)
     workflow.add_node("generate", _generate)
     workflow.add_node("rephrase_query", _rephrase_query)
     workflow.add_node("express_uncertainty", _express_uncertainty)
     workflow.add_node("wrap_up", _wrap_up)
 
-    workflow.add_edge(START, "user_intent")
-    workflow.add_edge("user_intent", "load_documents")
-    workflow.add_edge("load_documents", "grade_documents")
+    workflow.add_edge(START, "supervise")
+
+    workflow.add_conditional_edges(
+        "supervise",
+        tools_condition,
+        {
+            "tools": "retrieve_documents",
+            END: END,
+        },
+    )
+
+    workflow.add_edge("retrieve_documents", "grade_documents")
 
     workflow.add_conditional_edges(
         "grade_documents",
@@ -45,7 +55,7 @@ def get_graph() -> StateGraph:
         ["generate", "rephrase_query"],
     )
 
-    workflow.add_edge("rephrase_query", "load_documents")
+    workflow.add_edge("rephrase_query", "supervise")
 
     workflow.add_conditional_edges(
         "generate",
