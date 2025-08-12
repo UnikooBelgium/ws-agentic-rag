@@ -101,30 +101,6 @@ This opens LangGraph Studio where you can visualize the workflow and test querie
 - **Intelligent Uncertainty Handling** when confidence is low or information is insufficient
 - **Optimized State Management** with streamlined data flow and reduced complexity
 
-## 📁 Architecture
-
-**Improved Self-RAG Workflow:** **Supervise** → **Retrieve Documents** → **Grade Documents** → **Generate** → **Grade Answer** → **Wrap Up**
-
-### Core Components
-
-**🧠 Supervisor Node**: Intelligent routing system that analyzes queries and decides between:
-- **Tool-based retrieval** for complex technical questions requiring detailed documentation
-- **Direct responses** for simple questions or when comprehensive knowledge is sufficient
-- **Non-music production filtering** to maintain domain focus
-
-**🔄 Self-Correction Loop**:
-- **Semantic Query Analysis**: Understanding of music production terminology and intent
-- **Advanced Document Grading**: Lenient relevance assessment to maximize useful information
-- **Multi-criteria Answer Validation**: Separate hallucination detection and answer quality assessment
-- **Intelligent Rephrasing**: Context-aware query reformulation with previous attempt awareness
-
-**🛤️ Smart Routing Logic**:
-- Supervisor determines retrieval necessity → Retrieve & grade documents if needed
-- No relevant docs found OR 3 rephrases reached → Generate answer anyway
-- Quality answer generated → Wrap up successfully  
-- Hallucinated content detected → Express uncertainty with caveats
-- Poor but grounded answer → Rephrase query and retry (max 3x)
-
 ## 📄 License
 
 MIT License - see LICENSE file for details.
