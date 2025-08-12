@@ -31,10 +31,42 @@ Ensure your AWS credentials are configured with access to Bedrock services:
 aws configure
 ```
 
-Required Bedrock models in `eu-central-1` region:
-- `eu.anthropic.claude-sonnet-4-20250514-v1:0` (Chat)
-- `cohere.embed-multilingual-v3` (Embeddings)
-- `cohere.rerank-v3-5:0` (Reranking)
+### Environment Configuration
+
+1. **Copy the environment template**:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure your environment variables** in `.env`:
+   ```properties
+   # AWS Configuration
+   AWS_DEFAULT_REGION="your-preferred-region"
+   
+   # LangSmith Configuration
+   LANGSMITH_API_KEY="your_langsmith_api_key_here"
+   LANGSMITH_TRACING="true"
+   LANGSMITH_ENDPOINT="https://api.smith.langchain.com"  # or https://eu.api.smith.langchain.com for EU
+   LANGSMITH_PROJECT="agentic-rag"
+   ```
+
+3. **Example configuration for EU region**:
+   ```properties
+   AWS_DEFAULT_REGION="eu-central-1"
+   LANGSMITH_API_KEY="lsv2_pt_your_api_key_here"
+   LANGSMITH_TRACING="true"
+   LANGSMITH_ENDPOINT="https://eu.api.smith.langchain.com"
+   LANGSMITH_PROJECT="agentic-rag"
+   ```
+
+### Required Bedrock Models
+
+Ensure the following models are available in your configured AWS region:
+- **Chat Model**: `eu.anthropic.claude-sonnet-4-20250514-v1:0` (EU regions) or equivalent Claude Sonnet model for your region
+- **Embeddings**: `cohere.embed-multilingual-v3`
+- **Reranking**: `cohere.rerank-v3-5:0`
+
+**Note**: Model availability varies by AWS region. Check the [AWS Bedrock documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html) for model availability in your chosen region.
 
 ### Setup
 
