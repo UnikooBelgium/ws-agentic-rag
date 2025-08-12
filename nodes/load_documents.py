@@ -4,9 +4,9 @@ from utils.vector_store import load_vector_store
 _loaded_vector_store = load_vector_store("resources/MakingMusic_DennisDeSantis.pdf")
 
 
-def _load_search_results(state: AgentState):
+def _load_documents(state: AgentState):
     """
-    Load search results into the agent state.
+    Load documents into the agent state.
     """
 
     query = state.original_user_query
@@ -16,6 +16,5 @@ def _load_search_results(state: AgentState):
     search_results = _loaded_vector_store.invoke(query)
 
     return {
-        "search_results": [doc.page_content for doc in search_results],
-        "search_results_relevant": False,
+        "documents": [doc.page_content for doc in search_results],
     }

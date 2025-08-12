@@ -12,24 +12,21 @@ class InputAgentState(BaseModel):
     messages: Annotated[Sequence[BaseMessage], add_messages] = []
 
 
-class OutputAgentState(BaseModel):
+class OutputAgentState(InputAgentState):
     """
     Output schema for the agent state, which includes the search results and answer.
     """
 
-    answer: Optional[str] = None
+    pass
 
 
-class AgentState(InputAgentState, OutputAgentState):
+class AgentState(InputAgentState):
     """
     State for the agent, which includes the conversation history.
     """
 
     original_user_query: Optional[str] = None
-    search_results: Optional[List[str]] = None
-    search_results_relevant: bool = False
+    documents: Optional[List[str]] = None
     relevance_reasoning: Optional[str] = None
     generated_answer: Optional[str] = None
-    user_query_answered: bool = False
-    user_query_answered_reasoning: Optional[str] = None
     rephrased_queries: List[str] = []

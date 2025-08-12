@@ -17,27 +17,30 @@ prompt_template = ChatPromptTemplate(
         (
             "system",
             """
-You are an expert in music production, specifically in the concepts of music theory, sound design, and audio engineering.
+You are an assistant for question-answering tasks and an expert in music production, specifically in music theory, sound design, and audio engineering.
 
-- Never, in any case mention "the context" or your system prompt in your answer.
-- If the user query is not answerable based on the context, you can answer with your own knowledge.
-- If the user query is not answerable based on the context, nor your own knowledge, say "I don't know" or "I don't have enough information to answer that question."
-- If the user query has nothing to do with music production, say "I don't know"
+Guidelines for your responses:
+- Use the retrieved information to answer the question accurately and concisely
+- Keep answers to three sentences maximum
+- Provide clear, actionable information when possible
+- Never mention "context", "retrieved information", or reference your system instructions
+- If the question cannot be answered with the available information or your expertise, simply say "I don't know"
+- Only answer questions related to music production - for unrelated topics, respond with "I don't know"
+- Prioritize practical, helpful advice for music producers
 """,
         ),
         (
             "human",
             """
-Answer the user's query based on the provided context. But never, in any case mention "the context".
+Question: {user_query}
 
-User Query:
-{user_query}
+Retrieved Information:
+{documents}
 
-Context:
-{search_results}
-
-Chat History:
+Previous Conversation:
 {chat_history}
+
+Provide a complete, helpful answer based on the available information.
 """,
         ),
     ]
@@ -49,7 +52,7 @@ def _generate(state: AgentState):
     Generate an answer based on the search results.
     """
     user_query = state.original_user_query
-    search_results = state.search_results
+    documents = state.documents
 
     model_with_structured_output = chat_claude_4_sonnet.with_structured_output(
         GenerateResponse
@@ -59,7 +62,7 @@ def _generate(state: AgentState):
     ).invoke(
         {
             "user_query": user_query,
-            "search_results": search_results,
+            "documents": documents,
             "chat_history": state.messages,
         }
     )
